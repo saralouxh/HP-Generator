@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harry Potter Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="magic-wand.png" type="image/png">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Resources -->
+    <!-- https://codepen.io/kucsatax/pen/vyWevX -->
+    <!-- https://api.potterdb.com/ -->
+
+</head>
+<body>
+
+   
+    <div class="container">
+        <div id="starshine">
+            <div class="template shine"></div>
+        </div>
+
+        <!-- Potion Container -->
+        <div class="section-box">
+            <div class="row" style="align-items: center;">
+                <h1>Click To Get Your Potion</h1>
+                <button onClick="getPotion()"></button>
+            </div>
+            <div class="row">
+                <h3>Potion:</h3>
+                <p id="potion-name"></p>
+            </div>
+            <div class="row">
+                <h3>Effect:</h3>
+                <p id="potion-effect"></p>
+            </div>
+            <div class="row">
+                <h3>Ingredients:</h3>
+                <p id="potion-ingredients"></p>
+            </div>
+            <div class="row">
+                <p id="potion-img"></p>
+            </div>
+        </div>
+        
+    
+        <!-- Spell Container -->
+        <div class="section-box">
+            <div class="row" style="align-items: center;">
+                <h1>Click To Get Your Spell</h1>
+                <button onClick="getSpell()"></button>
+            </div>
+            <div class="row">
+                <h3>Spell:</h3>
+                <p id="spell-name"></p>
+            </div>
+            <div class="row">
+                <h3>Effect:</h3>
+                <p id="spell-effect"></p>
+            </div>
+            <div class="row">
+                <p id="spell-img"></p>
+            </div>
+        </div>
+
+    </div>
+
+    
+    
+    
+    <script>
+
+        // API URL
+        const potion_url = "https://api.potterdb.com/v1/potions";
+        const spell_url = "https://api.potterdb.com/v1/spells";
+
+        // Potion Elements
+        const potionNameElement = document.getElementById("potion-name");
+        const potionEffectElement = document.getElementById("potion-effect");
+        const potionIngredientsElement = document.getElementById("potion-ingredients");
+        const potionImgElement = document.getElementById("potion-img");
+
+        // Spell Elements
+        const spellNameElement = document.getElementById("spell-name");
+        const spellEffectElement = document.getElementById("spell-effect");
+        const spellImgElement = document.getElementById("spell-img");
+
+        // Get Potion Info
+        async function getPotion(){
+            try {
+                const response = await fetch(potion_url);
+                const data = await response.json();
+                const potionArray = data.data;
+                console.log(potionArray);
+
+                // Generate random index
+                const randomIndex = Math.floor(Math.random() * potionArray.length);
+
+                // Get random potion
+                const randomPotion = potionArray[randomIndex].attributes;
+                const potionName = randomPotion.name;
+                const potionEffect = randomPotion.effect;
+                const potionIngredients = randomPotion.ingredients;
+                const potionImg = randomPotion.image;
+                // Set inner HTML of potion info
+                potionNameElement.innerHTML = potionName;
+                potionEffectElement.innerHTML = potionEffect;
+                potionIngredientsElement.innerHTML = potionIngredients;
+                potionImgElement.innerHTML = `<img src="${potionImg}" alt="${potionName}">`;
+
+            } catch (error) {
+                console.log("Error:", error);
+            }
+        }
+
+        // Get Spell Info
+        async function getSpell(){
+            try {
+                const response = await fetch(spell_url);
+                const data = await response.json();
+                const spellArray = data.data;
+                console.log(data);
+
+                // Generate random index
+                const randomIndex = Math.floor(Math.random() * spellArray.length);
+
+                // Get random spell
+                const randomSpell = spellArray[randomIndex].attributes;
+                const spellName = randomSpell.name;
+                const spellEffect = randomSpell.effect;
+                const spellImg = randomSpell.image;
+
+                // Set inner HTML of spell info
+                spellNameElement.innerHTML = spellName;
+                spellEffectElement.innerHTML = spellEffect;
+                spellImgElement.innerHTML = `<img src="${spellImg}" alt="${spellName}">`;
+
+            } catch (error) {
+                console.log("Error:", error);
+            }
+        }
+
+        $(function() {
+            var body = $('#starshine'),
+                template = $('.template.shine'),
+                stars =  500,
+                sparkle = 20;
+            
+                
+            var size = 'small';
+            var createStar = function() {
+                template.clone().removeAttr('id').css({
+                top: (Math.random() * 100) + '%',
+                left: (Math.random() * 100) + '%',
+                webkitAnimationDelay: (Math.random() * sparkle) + 's',
+                mozAnimationDelay: (Math.random() * sparkle) + 's'
+                }).addClass(size).appendTo(body);
+            };
+            
+            for(var i = 0; i < stars; i++) {
+                if(i % 2 === 0) {
+                size = 'small';
+                } else if(i % 3 === 0) {
+                size = 'medium';
+                } else {
+                size = 'large';
+                }
+                
+                createStar();
+            }
+            });
+
+    </script>
+</body>
+</html>
